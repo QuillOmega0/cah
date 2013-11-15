@@ -104,20 +104,25 @@ cah.start = function () {
     $header.on('click', '.login', function () {
         var username = $('.username').val();
         if (username.length > 0) {
-            $(this).attr('disabled', '');
-            cah.emit("join", username)
-                .then(function (result) {
-                    var $login = $('.login');
-                    if (result === false) {
-                        $login.removeAttr('disabled');
-                        alert('Name already taken.');
-                    }
-                    else {
-                        $login.hide();
-                        $('.username').hide();
-                        cah.username = username;
-                    }
-                }, onError);
+            //Prevent usernames >16 chars on clientside.
+            if (username.length < 17) {
+                $(this).attr('disabled', '');
+                cah.emit("join", username)
+                    .then(function (result) {
+                        var $login = $('.login');
+                        if (result === false) {
+                            $login.removeAttr('disabled');
+                            alert('Name already taken.');
+                        }
+                        else {
+                            $login.hide();
+                            $('.username').hide();
+                            cah.username = username;
+                        }
+                    }, onError);
+            } else {
+                alert('Username must be 16 characters or less.');
+            }
         }
     });
 
