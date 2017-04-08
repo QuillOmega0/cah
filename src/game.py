@@ -298,6 +298,9 @@ class Game(object):
             for user in self.users:
                 self._state.available_white_cards -= set(user.hand)
 
+	# Reseed the RNG before we use it! Otherwise the system clock will be used to seed when the generator is initialized; which is probably once and certainly not enough.
+	random.seed(os.urandom(64));
+	
         # This is not robust if the game is configured with very large hands or very few white cards
         cards = random.sample(self._state.available_white_cards, num_cards)
         self._state.available_white_cards -= set(cards)
@@ -307,6 +310,7 @@ class Game(object):
     def _get_black_card(self):
         if len(self._state.available_black_cards) <= 0:
             self._state.avalable_black_cards = set(copy.deepcopy(self._black_cards))
+	random.seed(os.urandom(64));
         card = random.sample(self._state.available_black_cards, 1)[0]
         self._state.available_black_cards.remove(card)
         return card
